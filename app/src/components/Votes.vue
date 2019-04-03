@@ -90,7 +90,7 @@ export default {
       isVotable(key, this.address)
         .then(res => {
           if (!res) {
-            throw "您已经投票过，请不要重复投票";
+            throw new Error("您已经投票过，请不要重复投票");
           }
           return true;
         })

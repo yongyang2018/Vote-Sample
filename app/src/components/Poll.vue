@@ -33,6 +33,7 @@ export default {
     return {
       title: "",
       content: "",
+      // TODO: limit total coun as uint8
       totalcoun: 0
     };
   },
