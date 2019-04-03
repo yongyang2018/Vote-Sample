@@ -9,6 +9,15 @@ The recommended operating systems for the dapp development is posix-like.
 
 ## Tools
 
+### Vue-cli
+
+The front-end parts of the dapp is based on vue.js.
+
+```sh
+cp app
+npm run serve
+```
+
 ### Truffle@~4.1.13
 
 Truffle is a development environment, testing framework and asset pipeline for Ethereum, aiming to make life as an Ethereum developer easier. 

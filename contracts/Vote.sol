@@ -70,7 +70,7 @@ contract Vote is owned{
         lengths.push(les);
     }
  
-    //投票
+    //投票前检查是否可以投票 
     function voteaction(uint key ,address add) public view returns(uint8 result){
         uint256 cousupp=VoteMapp[key].support;
         uint256 couopp=VoteMapp[key].oppose;

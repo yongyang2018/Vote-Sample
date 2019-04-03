@@ -1,26 +1,33 @@
 <template>
   <div id="app">
     <Header></Header>
-    <b-container>
-      <b-form-row>
-        <Votes></Votes>
-      </b-form-row>
-    </b-container>
+    <div class="mt-5 container">
+      <Votes ref="votes"></Votes>
+    </div>
+    <div class="mt-5 container">
+      <Poll ref="poll"></Poll>
+    </div>
   </div>
 </template>
 
 <script>
-import Header from './components/Header'
-import Votes from './components/Votes'
+import Header from "./components/Header";
+import Votes from "./components/Votes";
+import Poll from "./components/Poll";
 export default {
-  name: 'app',
+  name: "app",
+  mounted(){
+    this.$refs.poll.$on('poll', ()=>{
+      this.$refs.votes.getVoteInfos()
+    })
+  },
   components: {
     Header,
-    Votes
+    Votes,
+    Poll
   }
-}
+};
 </script>
 
 <style scoped>
-
 </style>

@@ -1,39 +1,106 @@
 <template>
   <div>
-    <b-table striped hover :items="items" :fields="fields" class="table-vote"></b-table>
+    <h1 class="h1">Vote</h1>
+    <div class="form-group col-md-4 mt-5">
+      <label>Choose your ethereum address</label>
+    <select class="custom-select" v-model="address">
+      <option v-for="(account, index) in accounts" :key="index" :value="account">{{ account }}</option>
+    </select>
+    </div>
+    <table class="table table-striped text-center">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">标题</th>
+          <th scope="col">内容</th>
+          <th scope="col">参与投票数</th>
+          <th scope="col">是否已经关闭</th>
+          <th scope="col">支持票</th>
+          <th scope="col">反对票</th>
+          <th scope="col">投票</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(vote, index) in votes" v-bind:key="index">
+          <th scope="row">{{ index }}</th>
+          <td scope="row">{{ vote.title }}</td>
+          <td scope="row">{{ vote.content }}</td>
+          <td scope="row">{{ vote.totalcoun }}</td>
+          <td scope="row">{{ vote.isClosed ? '是' : '否' }}</td>
+          <td scope="row">{{ vote.support }}</td>
+          <td scope="row">{{ vote.oppose }}</td>
+          <td>
+            <button
+              @click="voteSupport(vote.id)"
+              type="button"
+              class="btn btn-outline-success btn-sm mr-2"
+            >支持</button>
+            <button
+              @click="voteOppose(vote.id)"
+              type="button"
+              class="btn btn-outline-danger btn-sm"
+            >反对</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </template>
 
 <script>
-import { getVoteslength, getAllVotes } from '../api/index'
+import { getVoteInfos, voteType, vote, hasVote, getAccounts } from "../api/index";
 export default {
   created() {
-    // getVoteslength().then((res) => {
-    //     console.log(res)
-    //     return getAllVotes(0)
-    // })
-    // .then((res) => {
-    //     console.log(res)
-    // })
+    this.getVoteInfos();
+    this.getAccounts();
   },
   data() {
     return {
-      // Note `isActive` is left out and will not appear in the rendered table
-      fields: ['first_name', 'last_name', 'age'],
-      items: [
-        {
-          isActive: true,
-          age: 40,
-          first_name: 'Dickerson',
-          last_name: 'Macdonald'
-        },
-        { isActive: false, age: 21, first_name: 'Larsen', last_name: 'Shaw' },
-        { isActive: false, age: 89, first_name: 'Geneva', last_name: 'Wilson' },
-        { isActive: true, age: 38, first_name: 'Jami', last_name: 'Carney' }
-      ]
+      votes: [],
+      address: "",
+      accounts: []
+    };
+  },
+  methods: {
+    getAccounts(){
+      getAccounts().then((res) => {
+        this.accounts.splice(0, this.accounts.length);
+        for (let r of res) {
+          this.accounts.push(r);
+        }    
+      })
+    },
+    getVoteInfos() {
+      getVoteInfos().then(votes => {
+        this.votes.splice(0, this.votes.length);
+        for (let v of votes) {
+          this.votes.push(v);
+        }
+      });
+    },
+    vote(key, type) {
+      hasVote(key, this.address).then(res => {
+        if (res) {
+          throw "您已经投票过，请不要重复投票"
+        }
+        return true
+      }).then(() => {
+        return vote(key, type, this.address)
+      }).catch((err) =>{
+        alert(err)
+      })
+      hasVote(key, this.address).then(
+        this.getVoteInfos
+      )
+    },
+    voteSupport(key) {
+      this.vote(key, voteType.Support);
+    },
+    voteOppose(key) {
+      this.vote(key, voteType.Oppose);
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

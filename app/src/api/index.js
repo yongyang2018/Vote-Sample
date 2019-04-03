@@ -3,10 +3,6 @@ import { abi, networks } from '../../../build/contracts/Vote.json'
 
 const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'))
 
-// TODO: 正式版要从用户读取账户
-const defaultAccount = '0xf8084026dc89D32E36Df5aB67258Bf56FDD97bFe';
-
-// TODO: 正式版要从配置文件读取合约地址和 abi, gasPerTx
 // initialize the contract
 const contract = new web3.eth.Contract(
   abi, networks['5777'].address
@@ -15,41 +11,89 @@ const contract = new web3.eth.Contract(
 // gas per transaction used
 const defaultGasPerTx = 3141592
 
+function bn2Number(bn){
+  return web3.utils.toBN(bn).toNumber()
+}
+
+export const voteStatus = {
+  Open: 1,
+  Close: 2,
+}
+
+export const voteType = {
+  Support: 1,
+  Oppose: 0,
+}
+
+export const voteHistory ={
+  Voted: 1,
+  NotNoted: 2,
+}
+
 export default web3
 
-export function getVoteslength () {
-  return contract.methods['getlength']().call()
+// 获取地址
+export function getAccounts(){
+  return web3.eth.getAccounts()
 }
 
 // 获取所有投票信息
-export function getAllVotes () {
+export function getVoteInfos () {
     let votes = []
-    return getVoteslength().then(
+    return contract.methods['getlength']().call(
+    ).then(
       (lengthBN) =>{
         let promises = []
-        let length = web3.utils.toBN(lengthBN).toNumber()
+        let length = bn2Number(lengthBN)
         for(let key = 0 ; key < length; key ++){
-          promises.push(getVoteByKey(key).then((vote) => {
+          promises.push(getVoteInfoByKey(key).then((vote) => {
             votes[key] = vote
           }))
         }
         return Promise.all(promises)
       }
     ).then(()=>{
-      return votes
+        for(let v of votes){
+          v.oppose = bn2Number(v.oppose)
+          v.support = bn2Number(v.support)
+          v.totalcoun = bn2Number(v.totalcoun)
+          v.id = bn2Number(v.id)
+          v.isClosed = v.status === voteStatus.Close
+        }
+        return votes
     })
 }
 
 // 根据 id 获取投票信息
-export function getVoteByKey(key){
+export function getVoteInfoByKey(key){
   return contract.methods['selectAll'](key).call()
 }
 
-// 保存投票信息
-export function saveInfo(title, content, totalcoun){
+// 发起投票项
+export function createVote(title, content, totalcoun){
   const func = contract.methods['saveinfo']
-  return func(title, content, totalcoun).send({
-    from: defaultAccount,
+  return web3.eth.getAccounts().then((res) => {
+    return res[0]
+  }).then((address) => {
+    return func(title, content, totalcoun).send({
+      from: address,
+      gas: defaultGasPerTx
+    })
+  })
+}
+
+// 进行投票
+export function vote(key, type, address){
+  return contract.methods['updatevote'](key, type, address).send({
+    from: address,
     gas: defaultGasPerTx,
+  })
+}
+
+// 进行投票
+export function hasVote(key,address){
+  return contract.methods['voteaction'](key, address).call().then((res) => {
+    console.log(bn2Number(res))
+    return bn2Number(res) === voteHistory.Voted
   })
 }
