@@ -1,30 +1,37 @@
 {
   "name": "app",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "webpack",
-    "dev": "webpack-dev-server --port 30000"
-  },
-  "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.3",
-    "babel-eslint": "^8.2.6",
-    "babel-loader": "^7.1.5",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-plugin-transform-react-jsx": "^6.24.1",
-    "babel-plugin-transform-runtime": "^6.23.0",
-    "babel-preset-env": "^1.7.0",
-    "babel-register": "^6.26.0",
-    "copy-webpack-plugin": "^4.6.0",
-    "css-loader": "^0.28.11",
-    "style-loader": "^0.21.0",
-    "webpack": "^4.28.1",
-    "webpack-cli": "^3.2.1",
-    "webpack-dev-server": "^3.1.14"
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint",
+    "compile": "node_modules/.bin/truffle compile ../"
   },
   "dependencies": {
-    "web3": "^1.0.0-beta.37"
+    "core-js": "^2.6.5",
+    "vue": "^2.6.10",
+    "vuex": "^3.0.1",
+    "web3": "^1.0.0-beta.51"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "^3.5.0",
+    "@vue/cli-plugin-eslint": "^3.5.0",
+    "@vue/cli-service": "^3.5.0",
+    "@vue/eslint-config-standard": "^4.0.0",
+    "babel-eslint": "^10.0.1",
+    "bootstrap": "^4.3.1",
+    "bootstrap-vue": "^2.0.0-rc.16",
+    "css-loader": "^2.1.1",
+    "eslint": "^5.8.0",
+    "eslint-config-prettier": "^4.1.0",
+    "eslint-plugin-prettier": "^3.0.1",
+    "eslint-plugin-vue": "^5.0.0",
+    "node-sass": "^4.9.0",
+    "normalize.css": "8.0.1",
+    "prettier": "^1.16.4",
+    "sass-loader": "^7.1.0",
+    "truffle": "4.1.13",
+    "vue-template-compiler": "^2.5.21"
   }
 }

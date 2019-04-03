@@ -141,4 +141,3 @@ contract Vote is owned{
     }
 
 }
-
