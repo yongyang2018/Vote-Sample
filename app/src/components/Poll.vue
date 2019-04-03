@@ -14,9 +14,9 @@
         <div class="form-group col-md-4">
           <label>Total Counts</label>
           <input type="text" class="form-control" placeholder="总票数限制" v-model="totalcoun">
-        </div>    
+        </div>
         <div class="form-group col-md-4">
-        <label>&nbsp;</label>
+          <label>&nbsp;</label>
           <button type="submit" class="form-control btn btn-outline-primary">Submit</button>
         </div>
       </div>
@@ -26,24 +26,24 @@
 
 
 <script>
-import {createVote} from '../api/index'
+import { createVote } from "../api/index";
 export default {
   name: "Poll",
-  data(){
+  data() {
     return {
-      title:'',
-      content: '',
-      totalcoun: 0,
-    }
+      title: "",
+      content: "",
+      totalcoun: 0
+    };
   },
   methods: {
-    poll(e){
-      e.preventDefault()
-      createVote(this.title, this.content, this.totalcoun).then(
-        (res) => {
-          this.$emit('poll')
-        }
-      )
+    // web3 contract.method.send() not works as expected
+    poll(e) {
+      e.preventDefault();
+      createVote(this.title, this.content, this.totalcoun).then(() => {
+        console.log("------"); // this never happens
+        this.$emit("poll");
+      });
     }
   }
 };

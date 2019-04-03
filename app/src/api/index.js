@@ -79,6 +79,9 @@ export function createVote(title, content, totalcoun){
       from: address,
       gas: defaultGasPerTx
     })
+  }).then(() => {
+    console.log('====')
+    return true
   })
 }
 
@@ -91,9 +94,6 @@ export function vote(key, type, address){
 }
 
 // 进行投票
-export function hasVote(key,address){
-  return contract.methods['voteaction'](key, address).call().then((res) => {
-    console.log(bn2Number(res))
-    return bn2Number(res) === voteHistory.Voted
-  })
+export function isVotable(key,address){
+  return contract.methods['checkVotable'](key, address).call()
 }

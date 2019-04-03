@@ -58,7 +58,7 @@ contract Vote is owned{
     }
 
     //保存
-    function saveinfo(string memory title ,string memory content,uint8 totalcoun) public{
+    function saveinfo(string memory title ,string memory content,uint8 totalcoun) public returns(bool result){
         uint les = lengths.length;
 
         VoteMapp[les].title= title;
@@ -68,24 +68,28 @@ contract Vote is owned{
         VoteMapp[les].support=0;
         VoteMapp[les].oppose=0;
         lengths.push(les);
+        return true;
     }
  
-    //投票前检查是否可以投票 
-    function voteaction(uint key ,address add) public view returns(uint8 result){
+    //投票前检查是否可以投票 可以返回 true 不可以返回 false
+    function checkVotable(uint key ,address add) public view returns(bool result){
         uint256 cousupp=VoteMapp[key].support;
         uint256 couopp=VoteMapp[key].oppose;
         uint256 totalcount=VoteMapp[key].totalcoun;
-        // if(!compare(totalcount,cousupp,couopp)){
-        //     return 1;//投票超过总票数
-        // }   
+        if(!compare(totalcount,cousupp,couopp)){
+            return false;//投票超过总票数
+        }   
         if(!addresscompare(key,add)){
-            return 1;//已经投票
+            return false;//已经投票
         }
-        return 2;//正常
+        return true;//正常
     }
 
-    //修改投票
-    function updatevote(uint key ,uint8 types,address add) public{
+    //修改投票 成功返回 true 失败返回 false
+    function updatevote(uint key ,uint8 types,address add) public returns(bool result){
+        if (!checkVotable(key, add)){
+            return false;
+        }
         uint256 cousupp=VoteMapp[key].support;
         uint256 couopp=VoteMapp[key].oppose;
         uint256 totalcount=VoteMapp[key].totalcoun;
@@ -101,6 +105,7 @@ contract Vote is owned{
             VoteMapp[key].status=2;
         }
         VoteMapp[key].addarray.push(add);
+        return true;
     }
 
     //展示
@@ -118,13 +123,8 @@ contract Vote is owned{
 
 
     //比较总票数
-    function compare(uint256 a,uint256 b,uint256 c) public view returns(bool result){
-        uint256 d=b+c;
-        if(a>d){
-            return true;
-        }else{
-            return false;
-        }
+    function compare(uint256 totalCoun,uint256 support,uint256 opposes) public view returns(bool result){
+        return totalCoun > support + opposes;
     }
 
     //比较addres重复
@@ -132,8 +132,6 @@ contract Vote is owned{
         for(uint i=0;i<VoteMapp[key].addarray.length;i++){
             if(VoteMapp[key].addarray[i]==add){
                 return false;
-            }else{
-                return true;
             }
         }
         return true;
