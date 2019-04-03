@@ -1,10 +1,15 @@
-# DAPPSample
-## 版本
-### ubuntu-18.04.1 AMD64
-### npm 3.5.2 
+# VoteDAPP
 
+## Environments
 
-### truffle@~4.1.13
+The recommended operating systems for the dapp development is posix-like.
+
+- ubuntu-18.04.1 AMD64
+- npm 3.5.2 	
+
+## Tools
+
+### Truffle@~4.1.13
 
 Truffle is a development environment, testing framework and asset pipeline for Ethereum, aiming to make life as an Ethereum developer easier. 
 
