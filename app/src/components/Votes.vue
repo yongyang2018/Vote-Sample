@@ -57,12 +57,11 @@ import {
   isVotable,
   getAccounts
 } from "../api/index";
-import { setInterval } from 'timers';
 export default {
   created() {
     this.getVoteInfos();
     this.getAccounts();
-    this.intervalID = setInterval(this.getVoteInfos, 500)
+    this.intervalID = window.setInterval(this.getVoteInfos, 500)
   },
   data() {
     return {
@@ -105,7 +104,7 @@ export default {
           return true;
         })
         .then(() => {
-          return vote(key, type, this.address);
+          return vote(key, type, this.address)
         })
         .then(() => {
           console.log("======"); // this never happens

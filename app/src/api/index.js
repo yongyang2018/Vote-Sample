@@ -40,24 +40,34 @@ export function getAccounts(){
 // 获取所有投票信息
 export function getVoteInfos (address) {
     let votes = []
+    let length = 0
     return contract.methods['getlength']().call(
     ).then(
       (lengthBN) =>{
         let promises = []
-        let length = bn2Number(lengthBN)
+        length = bn2Number(lengthBN)
         for(let key = 0 ; key < length; key ++){
           promises.push(getVoteInfoByKey(key).then((vote) => {
             votes[key] = vote
           }))
-          if(address){
-            promises.push(isVotable(key, address).then((flag) => {
-              votes[key].isVotable = flag
-            }))
-          }
         }
         return Promise.all(promises)
       }
-    ).then(()=>{
+    )
+    .then(() =>{
+      let promises = []
+      if(address){
+        for(let key = 0 ; key < length; key ++){
+          promises.push(isVotable(key, address).then((flag) => {
+            if (votes[key]){
+              votes[key].isVotable = flag
+            }
+          }))
+        }
+      }
+      return Promise.all(promises)
+    })
+    .then(()=>{
         for(let v of votes){
           v.oppose = bn2Number(v.oppose)
           v.support = bn2Number(v.support)
