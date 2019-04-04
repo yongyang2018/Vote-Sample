@@ -75,7 +75,7 @@ export default {
   font-size: .75rem;
   color: transparent;
   &.show{
-    color: #dc3545;
+    color: $color-danger;
   }
 }
 </style>
