@@ -100,10 +100,7 @@ export default {
           if (!res) {
             throw new Error("您已经投票过，请不要重复投票");
           }
-          return true;
-        })
-        .then(() => {
-          return vote(key, type, this.address)
+          return vote(key, type, this.address);
         })
         .then(() => {
           alert('投票成功')
