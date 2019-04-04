@@ -106,6 +106,7 @@ export default {
           return vote(key, type, this.address)
         })
         .then(() => {
+          alert('投票成功')
           this.getVoteInfos();
         })
         .catch((err) => {
