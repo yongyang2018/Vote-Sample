@@ -3,7 +3,7 @@
     <h1 class="h1">Vote</h1>
     <div class="form-group col-md-4 mt-5">
       <label>Choose your ethereum address</label>
-      <select class="custom-select" v-model="address">
+      <select class="custom-select" v-model="address" @change="this.getVoteInfos">
         <option v-for="(account, index) in accounts" :key="index" :value="account">{{ account }}</option>
       </select>
     </div>
