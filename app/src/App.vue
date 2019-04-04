@@ -7,6 +7,7 @@
     <div class="mt-5 container">
       <Poll ref="poll"></Poll>
     </div>
+    <div class="footer mb-5"></div>
   </div>
 </template>
 
