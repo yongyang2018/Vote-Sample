@@ -38,7 +38,7 @@ export function getAccounts(){
 }
 
 // 获取所有投票信息
-export function getVoteInfos () {
+export function getVoteInfos (address) {
     let votes = []
     return contract.methods['getlength']().call(
     ).then(
@@ -49,6 +49,11 @@ export function getVoteInfos () {
           promises.push(getVoteInfoByKey(key).then((vote) => {
             votes[key] = vote
           }))
+          if(address){
+            promises.push(isVotable(key, address).then((flag) => {
+              votes[key].isVotable = flag
+            }))
+          }
         }
         return Promise.all(promises)
       }

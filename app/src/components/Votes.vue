@@ -31,13 +31,13 @@
           <td scope="row">{{ vote.oppose }}</td>
           <td>
             <button
-              :disabled="vote.isClosed"
+              :disabled="vote.isVotable === false || vote.isClosed"
               @click="voteSupport(vote.id)"
               type="button"
               class="btn btn-outline-success btn-sm mr-2"
             >支持</button>
             <button
-              :disabled="vote.isClosed"
+              :disabled="vote.isVotable === false || vote.isClosed"
               @click="voteOppose(vote.id)"
               type="button"
               class="btn btn-outline-danger btn-sm"
@@ -57,16 +57,19 @@ import {
   isVotable,
   getAccounts
 } from "../api/index";
+import { setInterval } from 'timers';
 export default {
   created() {
     this.getVoteInfos();
     this.getAccounts();
+    this.intervalID = setInterval(this.getVoteInfos, 500)
   },
   data() {
     return {
       votes: [],
       address: "",
-      accounts: []
+      accounts: [],
+      intervalID: ""
     };
   },
   methods: {
@@ -79,7 +82,7 @@ export default {
       });
     },
     getVoteInfos() {
-      getVoteInfos().then(votes => {
+      getVoteInfos(this.address).then(votes => {
         this.votes.splice(0, this.votes.length);
         for (let v of votes) {
           this.votes.push(v);
@@ -87,6 +90,10 @@ export default {
       });
     },
     vote(key, type) {
+      if(!this.address){
+        alert("请选择您的地址")
+        return
+      }
       isVotable(key, this.address)
         .then(res => {
           if (!res) {
@@ -97,13 +104,14 @@ export default {
         .then(() => {
           return vote(key, type, this.address);
         })
-        .catch(err => {
-          alert('投票失败 请不要重复投票');
-        })
         .then(() => {
           console.log("======"); // this never happens
           this.getVoteInfos();
-        });
+        })
+        .catch(err => {
+          alert('投票失败 请不要重复投票');
+        })
+  ;
     },
     voteSupport(key) {
       this.vote(key, voteType.Support);
