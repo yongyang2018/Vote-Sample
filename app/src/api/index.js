@@ -90,21 +90,22 @@ export function createVote(title, content, totalcoun){
   return web3.eth.getAccounts().then((res) => {
     return res[0]
   }).then((address) => {
-    return func(title, content, totalcoun).send({
-      from: address,
-      gas: defaultGasPerTx
+    return new Promise((resolve) => {
+      func(title, content, totalcoun).send({
+        from: address,
+        gas: defaultGasPerTx
+      }, resolve)
     })
-  }).then(() => {
-    console.log('====')
-    return true
   })
 }
 
 // 进行投票
 export function vote(key, type, address){
-  return contract.methods['updatevote'](key, type, address).send({
-    from: address,
-    gas: defaultGasPerTx,
+  return new Promise((resolve) => {
+    contract.methods['updatevote'](key, type, address).send({
+      from: address,
+      gas: defaultGasPerTx,
+    }, resolve)
   })
 }
 

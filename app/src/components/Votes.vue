@@ -61,7 +61,6 @@ export default {
   created() {
     this.getVoteInfos();
     this.getAccounts();
-    this.intervalID = window.setInterval(this.getVoteInfos, 500)
   },
   data() {
     return {
@@ -107,7 +106,6 @@ export default {
           return vote(key, type, this.address)
         })
         .then(() => {
-          console.log("======"); // this never happens
           this.getVoteInfos();
         })
         .catch((err) => {
