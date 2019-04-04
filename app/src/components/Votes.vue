@@ -73,6 +73,7 @@ export default {
     };
   },
   methods: {
+    // 读取帐户
     getAccounts() {
       getAccounts().then(res => {
         this.accounts.splice(0, this.accounts.length);
@@ -81,6 +82,7 @@ export default {
         }
       });
     },
+    // 读取投票信息
     getVoteInfos() {
       getVoteInfos(this.address).then(votes => {
         this.votes.splice(0, this.votes.length);
@@ -89,6 +91,7 @@ export default {
         }
       });
     },
+    // 投票操作
     vote(key, type) {
       if(!this.address){
         alert("请选择您的地址")
@@ -108,14 +111,17 @@ export default {
           console.log("======"); // this never happens
           this.getVoteInfos();
         })
-        .catch(err => {
-          alert('投票失败 请不要重复投票');
+        .catch((err) => {
+          alert("投票失败 请不要重复投票")
+          console.error(err)
         })
   ;
     },
+    // 投支持票
     voteSupport(key) {
       this.vote(key, voteType.Support);
     },
+    // 投反对票
     voteOppose(key) {
       this.vote(key, voteType.Oppose);
     }

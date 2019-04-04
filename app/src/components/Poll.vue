@@ -54,6 +54,7 @@ export default {
         this.showError = true
         return;
       }
+      console.log("valid form")
       createVote(this.title, this.content, this.totalcoun).then(() => {
         console.log("------"); // this never happens
         this.$emit("poll");
@@ -63,7 +64,7 @@ export default {
       return this.totalcoun >= 1 && this.totalcoun <= 255;
     },
     isValidForm(){
-      return this.isValidTotalCoun && this.title && this.content
+      return this.isValidTotalCoun() && this.title && this.content
     }
   }
 };
