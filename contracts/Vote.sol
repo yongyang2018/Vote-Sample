@@ -25,7 +25,7 @@ contract owned {
      * 合约的所有者指派一个新的管理员
      * @param  newOwner address 新的管理员帐户地址
      */
-    function transferOwnership(address newOwner) onlyOwner public{
+    function transferOwnership(address newOwner) public onlyOwner {
         if (newOwner != address(0)) {
             owner = newOwner;
         }
